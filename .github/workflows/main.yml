@@ -66,7 +66,7 @@ jobs:
                     chmod 600 "${{ secrets.APP_DIR }}/.env"
             
             - name: Deploy via Docker Compose
-              uses: appleboy/ssh-actions@v1.1.0
+              uses: appleboy/ssh-action@v1.1.0
               with:
                  host: ${{ secrets.EC2_HOST }}
                  username: ${{ secrets.EC2_USER }}
