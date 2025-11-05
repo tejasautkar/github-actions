@@ -1,0 +1,42 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      # Compose will inject these from .env; fallbacks shown for clarity
+      NODE_ENV: ${NODE_ENV:-development}
+      PORT: ${PORT:-8080}
+      # IMPORTANT: host must be the service name "db", not localhost
+      DATABASE_URL: ${DATABASE_URL:-postgres://postgres:postgres@db:5432/mydb}
+    ports:
+      - "${PORT:-8080}:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/healthcheck > /dev/null 2>&1 || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${PGUSER:-postgres}
+      POSTGRES_PASSWORD: ${PGPASSWORD:-postgres}
+      POSTGRES_DB: ${PGDATABASE:-mydb}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PGUSER:-postgres} -d ${PGDATABASE:-mydb}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  db_data:
