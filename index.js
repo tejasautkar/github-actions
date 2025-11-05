@@ -56,6 +56,7 @@ app.use((err, req, res, next) => {
 
 init()
     .then(() => {
+        console.log("Database setup done, starting app...");
         app.listen(8080, () => console.log("listening on 8080"));
     })
     .catch((e) => {
