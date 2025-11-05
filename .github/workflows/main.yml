@@ -51,7 +51,7 @@ jobs:
                 remote_key: ${{ secrets.EC2_SSH_KEY }}
 
             - name: Write .env to EC2 (Github Secrets)
-              uses: appleboy/ssh-actions@v1.1.0
+              uses: appleboy/ssh-action@v1.1.0
               with:
                  host: ${{ secrets.EC2_HOST }}
                  username: ${{ secrets.EC2_USER }}
