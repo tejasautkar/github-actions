@@ -39,11 +39,10 @@ jobs:
             - name: Sync Repo to EC2
               uses: burnett01/rsync-deployments@7.0.1
               with:
-                switches: -avzr --delete \
-                    --exclude='.git' \
-                    --exclude='.github' \
-                    --exclude='node_modules'
-                path:
+                switches: >-
+                    -azr --delete --omit-dir-times --no-perms --no-owner --no-group
+                    --exclude=.git --exclude=.github --exclude=node_modules
+                path: .
                 remote_path: ${{ secrets.APP_DIR }}
                 remote_host: ${{ secrets.EC2_HOST }}
                 remote_port: ${{ secrets.EC2_PORT }}
